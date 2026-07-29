@@ -1,0 +1,25 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+.env
+
+# Secrets / credentials
+*.pem
+*.key
+*.crt
+credentials.json
+
+# langgraph dev local server cache
+.langgraph_api/
+
+# IDE / OS
+.idea/
+.DS_Store

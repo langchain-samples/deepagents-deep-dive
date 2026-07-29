@@ -1,0 +1,19 @@
+[project]
+name = "deepagents-deep-dive"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "boto3>=1.43.40",
+    "deepagents[quickjs]>=0.6.12",
+    "google-genai>=2.10.0",
+    "ipykernel>=7.3.0",
+    "ipywidgets>=8.1.0",
+    "langgraph-cli[inmem]>=0.4.30",
+    "langsmith[sandbox]>=0.9.4",
+    "numpy>=2.0.0",
+    "python-dotenv>=1.2.2",
+    "sounddevice>=0.5.0",
+    "tavily>=1.1.0",
+]

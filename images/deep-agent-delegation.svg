@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Deep agent delegating to multiple subagents</title>
+  <desc id="desc">A central deep agent coordinates several specialized subagents, each handling an independent task and returning results to the orchestrator.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <style>
+      .bg { fill: #f8fafc; }
+      .title { font: 700 34px Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 16px Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #64748b; }
+      .zone { fill: #ffffff; stroke: #e2e8f0; stroke-width: 2; rx: 28; }
+      .zone-label { font: 700 13px Inter, ui-sans-serif, system-ui, sans-serif; fill: #64748b; letter-spacing: .08em; }
+      .node { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2.5; rx: 18; }
+      .primary { fill: #eff6ff; stroke: #3b82f6; }
+      .subagent { fill: #ecfdf5; stroke: #10b981; }
+      .result { fill: #fffbeb; stroke: #f59e0b; }
+      .node-title { font: 700 19px Inter, ui-sans-serif, system-ui, sans-serif; fill: #0f172a; }
+      .node-text { font: 500 14px Inter, ui-sans-serif, system-ui, sans-serif; fill: #334155; }
+      .small { font: 600 12px Inter, ui-sans-serif, system-ui, sans-serif; fill: #475569; }
+      .edge { fill: none; stroke: #475569; stroke-width: 2.5; marker-end: url(#arrow); }
+      .edge-muted { fill: none; stroke: #94a3b8; stroke-width: 2.5; stroke-dasharray: 7 7; marker-end: url(#arrow); }
+      .edge-label { font: 600 12px Inter, ui-sans-serif, system-ui, sans-serif; fill: #475569; }
+      .pill { fill: #e2e8f0; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1200" height="800"/>
+
+  <text x="600" y="62" text-anchor="middle" class="title">Deep Agent Delegation</text>
+  <text x="600" y="92" text-anchor="middle" class="subtitle">One orchestrator decomposes the task, dispatches work, and merges the outputs</text>
+
+  <g id="workspace" transform="translate(50 130)">
+    <rect class="zone" x="0" y="0" width="1100" height="620" rx="30"/>
+
+    <!-- Central deep agent -->
+    <g id="deep-agent" transform="translate(405 205)">
+      <rect class="node primary" width="290" height="170" rx="24"/>
+      <text x="145" y="42" text-anchor="middle" class="node-title">Deep Agent</text>
+      <text x="145" y="73" text-anchor="middle" class="node-text">
+        <tspan x="145" dy="0">Understands the goal</tspan>
+        <tspan x="145" dy="20">breaks it into sub-tasks</tspan>
+        <tspan x="145" dy="20">routes work to specialists</tspan>
+      </text>
+      <rect x="24" y="122" width="242" height="28" rx="14" class="pill"/>
+      <text x="145" y="141" text-anchor="middle" class="small">orchestrator • planner • coordinator</text>
+    </g>
+
+    <!-- Input -->
+    <g id="user-goal" transform="translate(340 28)">
+      <rect class="node" width="420" height="86" rx="18"/>
+      <text x="210" y="32" text-anchor="middle" class="node-title" font-size="18">User Goal</text>
+      <text x="210" y="56" text-anchor="middle" class="node-text">"Solve a complex task that needs multiple skills"</text>
+    </g>
+
+    <!-- Subagents -->
+    <g id="subagent-1" transform="translate(76 170)">
+      <rect class="node subagent" width="250" height="112" rx="18"/>
+      <text x="125" y="32" text-anchor="middle" class="node-title" font-size="17">Research Subagent</text>
+      <text x="125" y="58" text-anchor="middle" class="node-text">
+        <tspan x="125" dy="0">Gathers facts, docs, and evidence</tspan>
+        <tspan x="125" dy="18">Returns a concise brief</tspan>
+      </text>
+    </g>
+
+    <g id="subagent-2" transform="translate(76 398)">
+      <rect class="node subagent" width="250" height="112" rx="18"/>
+      <text x="125" y="32" text-anchor="middle" class="node-title" font-size="17">Analysis Subagent</text>
+      <text x="125" y="58" text-anchor="middle" class="node-text">
+        <tspan x="125" dy="0">Compares options and reasons</tspan>
+        <tspan x="125" dy="18">Produces recommendations</tspan>
+      </text>
+    </g>
+
+    <g id="subagent-3" transform="translate(774 170)">
+      <rect class="node subagent" width="250" height="112" rx="18"/>
+      <text x="125" y="32" text-anchor="middle" class="node-title" font-size="17">Code Subagent</text>
+      <text x="125" y="58" text-anchor="middle" class="node-text">
+        <tspan x="125" dy="0">Implements the solution</tspan>
+        <tspan x="125" dy="18">Creates artifacts / patches</tspan>
+      </text>
+    </g>
+
+    <g id="subagent-4" transform="translate(774 398)">
+      <rect class="node subagent" width="250" height="112" rx="18"/>
+      <text x="125" y="32" text-anchor="middle" class="node-title" font-size="17">Verification Subagent</text>
+      <text x="125" y="58" text-anchor="middle" class="node-text">
+        <tspan x="125" dy="0">Checks correctness and edge cases</tspan>
+        <tspan x="125" dy="18">Returns pass/fail signals</tspan>
+      </text>
+    </g>
+
+    <!-- Output -->
+    <g id="final-answer" transform="translate(310 530)">
+      <rect class="node result" width="480" height="82" rx="18"/>
+      <text x="240" y="33" text-anchor="middle" class="node-title" font-size="18">Final Answer</text>
+      <text x="240" y="56" text-anchor="middle" class="node-text">Deep agent synthesizes all subagent results into one response</text>
+    </g>
+
+    <!-- Arrows from user goal to deep agent -->
+    <path class="edge" d="M 550 114 C 550 145, 550 165, 550 205"/>
+    <text x="565" y="162" class="edge-label">task request</text>
+
+    <!-- Delegation arrows -->
+    <path class="edge" d="M 405 285 C 332 285, 315 255, 326 228"/>
+    <text x="334" y="255" class="edge-label">delegate</text>
+
+    <path class="edge" d="M 405 330 C 332 330, 315 444, 326 454"/>
+    <text x="334" y="392" class="edge-label">delegate</text>
+
+    <path class="edge" d="M 695 285 C 768 285, 785 255, 774 228"/>
+    <text x="744" y="255" class="edge-label">delegate</text>
+
+    <path class="edge" d="M 695 330 C 768 330, 785 444, 774 454"/>
+    <text x="744" y="392" class="edge-label">delegate</text>
+
+    <!-- Return arrows -->
+    <path class="edge-muted" d="M 326 228 C 370 208, 395 220, 405 250"/>
+    <text x="360" y="206" class="edge-label">results</text>
+
+    <path class="edge-muted" d="M 326 454 C 370 470, 395 445, 405 380"/>
+    <text x="354" y="478" class="edge-label">results</text>
+
+    <path class="edge-muted" d="M 774 228 C 730 208, 705 220, 695 250"/>
+    <text x="712" y="206" class="edge-label">results</text>
+
+    <path class="edge-muted" d="M 774 454 C 730 470, 705 445, 695 380"/>
+    <text x="708" y="478" class="edge-label">results</text>
+
+    <!-- Synthesis arrow -->
+    <path class="edge" d="M 550 375 C 550 445, 550 480, 550 530"/>
+    <text x="566" y="476" class="edge-label">synthesize</text>
+  </g>
+</svg>

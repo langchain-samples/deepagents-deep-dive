@@ -1,0 +1,8 @@
+{
+    "venvPath": ".",
+    "venv": ".venv",
+    "typeCheckingMode": "standard",
+    "useLibraryCodeForTypes": true,
+    "reportMissingImports": "error",
+    "reportMissingTypeStubs": "none"
+}
