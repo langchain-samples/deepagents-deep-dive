@@ -1,13 +1,17 @@
 import asyncio
 import html as html_lib
 import time
+from functools import lru_cache
 from pathlib import Path
 
 import ipywidgets as widgets
 from IPython.display import Markdown, display
 from pygments import highlight
+from pygments.filter import Filter
 from pygments.formatters import HtmlFormatter
 from pygments.lexers import get_lexer_by_name, guess_lexer
+from pygments.styles import get_style_by_name
+from pygments.token import Generic, String
 from pygments.util import ClassNotFound
 
 _CODE_STYLE = "xcode"
@@ -48,6 +52,34 @@ _PRE_CSS = (
 )
 
 
+class _FencedBlockFilter(Filter):
+    """Retag a multi-line ``` block so it can be styled apart from inline code.
+
+    The Markdown lexer emits `String.Backtick` for an inline `span` and for a whole
+    fenced block alike, and most styles paint strings red - which turned a SKILL.md's
+    "Output format" block into a wall of red prose, one span per line. Only the
+    multi-line case is a block, so send it to its own token.
+    """
+
+    def filter(self, lexer, stream):  # noqa: A003 - Pygments' hook name
+        for ttype, value in stream:
+            if ttype is String.Backtick and "\n" in value:
+                ttype = Generic.Output
+            yield ttype, value
+
+
+@lru_cache(maxsize=None)
+def _markdown_style(name: str):
+    """`name` with code rendered for reading: fenced blocks in plain ink, inline
+    code tinted just enough to stay distinct from prose."""
+    base = get_style_by_name(name)
+    return type(
+        f"{name}_markdown",
+        (base,),
+        {"styles": {**base.styles, Generic.Output: "#24292f", String.Backtick: "#0550ae"}},
+    )
+
+
 def _highlight(code: str, lang: str, style: str) -> str:
     """Syntax-highlight code to a self-contained HTML card (inline styles, no
     external CSS) that renders identically in JupyterLab, VS Code, JetBrains,
@@ -56,6 +88,10 @@ def _highlight(code: str, lang: str, style: str) -> str:
         lexer = get_lexer_by_name(lang) if lang else guess_lexer(code)
     except ClassNotFound:
         lexer = get_lexer_by_name("text")
+    if lexer.name.lower() == "markdown":
+        # get_lexer_by_name hands back a fresh instance, so this filter is not global
+        lexer.add_filter(_FencedBlockFilter())
+        style = _markdown_style(style)
     formatter = HtmlFormatter(
         style=style, noclasses=True, cssstyles=_CARD_CSS, prestyles=_PRE_CSS
     )
