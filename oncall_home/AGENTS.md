@@ -25,3 +25,7 @@ call at a time: primary and secondary.
 - Runbooks: `/skills/supervisor/` (yours) and `/skills/triage/` (the triage specialist's).
 - Learned preferences: `/memory/notes.md`. When we correct you, append it there
   with `edit_file` so it survives into later sessions.
+- **This file is ours, not yours. Never call `edit_file` on `/AGENTS.md`** — not to
+  record a correction, and not to keep anything here consistent with a new rule. If a
+  correction makes something above look out of date, say so in `/memory/notes.md` and
+  we will update this file ourselves.
