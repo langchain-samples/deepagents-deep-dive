@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 970 670" width="970" height="670" role="img" aria-label="MemoryMiddleware intercepting a user message and writing a memory">
+<defs>
+<marker id="aR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#2b8a3e"/></marker>
+<marker id="aW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#bc4c00"/></marker>
+<marker id="aG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#5b6570"/></marker>
+</defs>
+<rect width="970" height="670" fill="#ffffff"/>
+<text x="44" y="34" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="20" fill="#14171a" font-weight="600" text-anchor="start">MemoryMiddleware: how a correction becomes a memory</text>
+<text x="44" y="55" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13.5" fill="#5b6570" font-weight="400" text-anchor="start">The stack create_deep_agent() builds, and the two paths a memory takes through it.</text>
+<rect x="44" y="76" width="378" height="50" rx="6" fill="#eaf1fd" stroke="#4a7fd6" stroke-width="1.4"/>
+<text x="56" y="95" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#2c5aa0" font-weight="600" text-anchor="start">user turn</text>
+<text x="56" y="114" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#14171a" font-weight="400" text-anchor="start">“start the first line with the severity…”</text>
+<path d="M 78,126 L 78,147" fill="none" stroke="#5b6570" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#aG)"/>
+<text x="90" y="143" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#5b6570" font-weight="400" text-anchor="start">enters the stack</text>
+<rect x="44" y="150" width="378" height="31" rx="5" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1.1"/>
+<text x="53" y="163" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#14171a" font-weight="500" text-anchor="start">1. TodoListMiddleware</text>
+<text x="53" y="176" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#5b6570" font-weight="400" text-anchor="start">wrap_model_call · after_model</text>
+<text x="413" y="176" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="10.5" fill="#5b6570" font-weight="400" text-anchor="end">+write_todos</text>
+<rect x="44" y="185" width="378" height="31" rx="5" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1.1"/>
+<text x="53" y="198" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#14171a" font-weight="500" text-anchor="start">2. SkillsMiddleware</text>
+<text x="53" y="211" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#5b6570" font-weight="400" text-anchor="start">before_agent · wrap_model_call</text>
+<text x="413" y="211" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="10.5" fill="#5b6570" font-weight="400" text-anchor="end">level-1 skill metadata</text>
+<rect x="44" y="220" width="378" height="31" rx="5" fill="#fff6e0" stroke="#d4a72c" stroke-width="1.1"/>
+<text x="53" y="233" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#14171a" font-weight="600" text-anchor="start">3. FilesystemMiddleware</text>
+<text x="53" y="246" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#5b6570" font-weight="400" text-anchor="start">wrap_model_call · wrap_tool_call</text>
+<text x="413" y="246" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="10.5" fill="#5b6570" font-weight="400" text-anchor="end">+read_file, edit_file, …</text>
+<rect x="44" y="255" width="378" height="31" rx="5" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1.1"/>
+<text x="53" y="268" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#14171a" font-weight="500" text-anchor="start">4. SubAgentMiddleware</text>
+<text x="53" y="281" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#5b6570" font-weight="400" text-anchor="start">wrap_model_call</text>
+<text x="413" y="281" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="10.5" fill="#5b6570" font-weight="400" text-anchor="end">+task</text>
+<rect x="44" y="290" width="378" height="31" rx="5" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1.1"/>
+<text x="53" y="303" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#14171a" font-weight="500" text-anchor="start">5. _DeepAgentsSummarizationMiddleware</text>
+<text x="53" y="316" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#5b6570" font-weight="400" text-anchor="start">wrap_model_call</text>
+<text x="413" y="316" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="10.5" fill="#5b6570" font-weight="400" text-anchor="end">compacts old turns</text>
+<rect x="44" y="325" width="378" height="31" rx="5" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1.1"/>
+<text x="53" y="338" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#14171a" font-weight="500" text-anchor="start">6. PatchToolCallsMiddleware</text>
+<text x="53" y="351" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#5b6570" font-weight="400" text-anchor="start">before_agent</text>
+<text x="413" y="351" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="10.5" fill="#5b6570" font-weight="400" text-anchor="end">repairs dangling calls</text>
+<rect x="44" y="360" width="378" height="31" rx="5" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1.1"/>
+<text x="53" y="373" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#14171a" font-weight="500" text-anchor="start">7. AnthropicPromptCachingMiddleware</text>
+<text x="53" y="386" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#5b6570" font-weight="400" text-anchor="start">wrap_model_call</text>
+<text x="413" y="386" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="10.5" fill="#5b6570" font-weight="400" text-anchor="end">cache breakpoint</text>
+<rect x="44" y="395" width="378" height="31" rx="5" fill="#e7f5ea" stroke="#2b8a3e" stroke-width="1.5"/>
+<text x="53" y="408" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#17512a" font-weight="600" text-anchor="start">8. MemoryMiddleware</text>
+<text x="53" y="421" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#5b6570" font-weight="400" text-anchor="start">before_agent · wrap_model_call</text>
+<text x="413" y="421" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="10.5" fill="#5b6570" font-weight="400" text-anchor="end">injects AGENTS.md + notes.md</text>
+<text x="106" y="443" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#2b8a3e" font-weight="600" text-anchor="start">MemoryMiddleware is appended last → innermost wrapper, nearest the model</text>
+<path d="M 78,426 L 78,471" fill="none" stroke="#5b6570" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#aG)"/>
+<rect x="44" y="474" width="378" height="48" rx="6" fill="#f4efff" stroke="#8250df" stroke-width="1.4"/>
+<text x="56" y="494" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#41297a" font-weight="600" text-anchor="start">chat model</text>
+<text x="56" y="511" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#5b6570" font-weight="400" text-anchor="start">sees the correction and its own memory in one prompt</text>
+<rect x="660" y="76" width="11" height="11" rx="2.5" fill="#2b8a3e"/>
+<text x="678" y="87" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#2b8a3e" font-weight="600" text-anchor="start">read path — memory into the system prompt</text>
+<rect x="660" y="96" width="11" height="11" rx="2.5" fill="#bc4c00"/>
+<text x="678" y="107" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#bc4c00" font-weight="600" text-anchor="start">write path — edit_file out to the backend</text>
+<text x="660" y="124" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="10.5" fill="#5b6570" font-weight="400" text-anchor="start">amber boxes sit on the write path:</text>
+<text x="660" y="137" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="10.5" fill="#5b6570" font-weight="400" text-anchor="start">FilesystemMiddleware owns edit_file,</text>
+<text x="660" y="150" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="10.5" fill="#5b6570" font-weight="400" text-anchor="start">and notes.md is what it writes.</text>
+<text x="660" y="170" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#5b6570" font-weight="600" text-anchor="start">the backend — oncall_home/</text>
+<rect x="660" y="186" width="272" height="76" rx="6" fill="#f6f8fa" stroke="#9a6700" stroke-width="1.2"/>
+<text x="672" y="208" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" fill="#14171a" font-weight="600" text-anchor="start">/AGENTS.md</text>
+<text x="672" y="225" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#5b6570" font-weight="400" text-anchor="start">curated by the team · conventions that</text>
+<text x="672" y="238" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#5b6570" font-weight="400" text-anchor="start">hold on every turn</text>
+<text x="672" y="254" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="10.5" fill="#9a6700" font-weight="600" text-anchor="start">write denied by FilesystemPermission</text>
+<rect x="660" y="306" width="272" height="88" rx="6" fill="#fff6e0" stroke="#bc4c00" stroke-width="1.6"/>
+<text x="672" y="328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" fill="#8a3800" font-weight="600" text-anchor="start">/memory/notes.md</text>
+<text x="672" y="345" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#5b6570" font-weight="400" text-anchor="start">writable · this is the memory being made</text>
+<text x="672" y="366" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#14171a" font-weight="400" text-anchor="start">- start the first line with the</text>
+<text x="672" y="379" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#14171a" font-weight="400" text-anchor="start">  severity in brackets, e.g. [SEV2]</text>
+<path d="M 660,218 L 448,218 L 448,409 L 426,409" fill="none" stroke="#2b8a3e" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#aR)"/>
+<path d="M 660,336 L 528,336 L 528,422 L 449,422" fill="none" stroke="#2b8a3e" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#aR)"/>
+<text x="464" y="240" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#2b8a3e" font-weight="600" text-anchor="start">① read and injected</text>
+<text x="464" y="257" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#2b8a3e" font-weight="400" text-anchor="start">into the system prompt</text>
+<text x="464" y="274" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#2b8a3e" font-weight="400" text-anchor="start">— verbatim, every turn,</text>
+<text x="464" y="291" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#2b8a3e" font-weight="400" text-anchor="start">with no tool call at all</text>
+<path d="M 422,492 L 948,492 L 948,350 L 936,350" fill="none" stroke="#bc4c00" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#aW)"/>
+<text x="434" y="509" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#bc4c00" font-weight="600" text-anchor="start">② the model calls</text>
+<text x="434" y="523" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#bc4c00" font-weight="600" text-anchor="start">edit_file</text>
+<text x="596" y="509" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#bc4c00" font-weight="400" text-anchor="start">③ executed by FilesystemMiddleware, written to the backend</text>
+<text x="660" y="428" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#14171a" font-weight="600" text-anchor="start">↻ written once — injected on every turn after,</text>
+<text x="660" y="444" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#5b6570" font-weight="400" text-anchor="start">across threads, processes and later sessions.</text>
+<rect x="44" y="546" width="882" height="102" rx="6" fill="#fbfcfd" stroke="#d0d7de" stroke-width="1"/>
+<text x="58" y="567" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#14171a" font-weight="600" text-anchor="start">Ordering rules</text>
+<text x="58" y="586" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#5b6570" font-weight="400" text-anchor="start">before_* run first → last  ·  after_* run last → first  ·  wrap_* nest, so #1 is the outermost and #8 the innermost.</text>
+<text x="58" y="607" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#5b6570" font-weight="400" text-anchor="start">MemoryMiddleware is appended last deliberately: it sits after the cache breakpoint (#7), so rewriting the system prompt with a fresh</text>
+<text x="58" y="622" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#5b6570" font-weight="400" text-anchor="start">memory doesn't invalidate the cached prefix in front of it.</text>
+<text x="58" y="640" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#5b6570" font-weight="400" text-anchor="start">Shown with skills, subagents and memory all configured. Every row is a default except SkillsMiddleware, which needs skills=.</text>
+</svg>
