@@ -7,13 +7,10 @@ description: >-
 ---
 
 # triage-alert
-
 ## Overview
-
 Turns a raw alert into a severity, a blast radius, and the first three things to do.
 
 ## Instructions
-
 1. **Read `references/severity-matrix.md` first.** Severity is decided by the
    matrix, never by feel. The matrix also carries override rules that beat the
    error-rate rows outright — you cannot get severity right without reading them.
@@ -24,7 +21,6 @@ Turns a raw alert into a severity, a blast radius, and the first three things to
 5. State whether a status-page update is required, per the matrix.
 
 ## Output format
-
 ```
 Severity: SEV<n> — matched: <the row or rule you applied>
 Blast radius: <share of traffic or customers, or "unknown">
@@ -36,7 +32,6 @@ First actions:
 ```
 
 ## Edge cases
-
 - Symptom sits between two rows → round up, never down.
 - Several symptoms at once → triage the worst one, and note the others.
 - No error rate given → say so and triage on the remaining evidence.
