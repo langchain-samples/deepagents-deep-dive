@@ -11,6 +11,7 @@ from util.pretty import (
     show_eval_code,
     show_file,
     show_tree,
+    stream_report,
 )
 from util.skills import (
     load_skill_metadata,
@@ -24,7 +25,17 @@ from util.stats import (
     sum_tokens,
 )
 from util.charts import show_comparison_bars
-from util.voice import MIC_RATE, SPEAKER_RATE, MicInput, SpeakerOutput, reset_audio
+from util.voice import (
+    MIC_RATE,
+    SPEAKER_RATE,
+    MicInput,
+    LatestJob,
+    SpeakerOutput,
+    VoiceUI,
+    reset_audio,
+    run_until_stopped,
+    start_session,
+)
 
 __all__ = [
     "LiveActivityPanel",
@@ -39,6 +50,7 @@ __all__ = [
     "show_eval_code",
     "show_file",
     "show_tree",
+    "stream_report",
     "load_skill_metadata",
     "show_memory",
     "show_skills",
@@ -48,8 +60,12 @@ __all__ = [
     "sum_tokens",
     "show_comparison_bars",
     "MicInput",
+    "LatestJob",
     "SpeakerOutput",
+    "VoiceUI",
     "reset_audio",
+    "run_until_stopped",
+    "start_session",
     "MIC_RATE",
     "SPEAKER_RATE",
 ]

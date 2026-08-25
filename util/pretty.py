@@ -392,7 +392,18 @@ class LiveActivityPanel:
                 content = f"<span style='opacity:.55;text-decoration:line-through;'>{content}</span>"
             color = _STATUS_COLOR.get(status, "#1a1a1a")
             rows.append(f"<div style='margin:5px 0 5px 30px;color:{color};'>{marker} {content}</div>")
-        plan_html = "".join(rows) or "<div style='margin-left:30px;color:#8a8a8a;'>planning…</div>"
+        if rows:
+            plan_html = "".join(rows)
+        elif self._done:
+            # Finished: no todos were ever recorded for this actor, so say nothing
+            # rather than leave a progress word standing over a completed run.
+            plan_html = ""
+        else:
+            # Live, but nothing to show yet. Only the coordinator is asked to plan;
+            # a subagent that just searches never writes todos, so calling its state
+            # "planning" would be a permanent lie.
+            waiting = "planning…" if scope == "coordinator" else "working…"
+            plan_html = f"<div style='margin-left:30px;color:#8a8a8a;'>{waiting}</div>"
 
         queries = [q for s, q in self._searches if s == scope]
         search_html = ""
@@ -424,6 +435,79 @@ class LiveActivityPanel:
                 f"<div style='margin-top:12px;font-weight:800;color:#2b8a3e;'>🗣️ narrating ({len(self._report)} chars)…</div>"
             )
         return f"<div style='{_PANEL_CSS}'>" + "".join(blocks) + "</div>"
+
+
+def _plain_text(content) -> str:
+    """Concatenate only the text blocks of a message — no markdown, no thinking.
+
+    render_content() is for display: it wraps thinking in a blockquote and renders
+    tool calls. A report headed for a text-to-speech layer must carry neither.
+    """
+    if isinstance(content, list):
+        return "".join(b.get("text", "") for b in content if isinstance(b, dict))
+    return content or ""
+
+
+_NO_FINDINGS = "I couldn't find anything useful on that."
+
+# Deep agents ship planning and filesystem tools of their own. The panel's activity
+# lane is for the *research* work, so the built-ins are filtered out of it rather
+# than the caller's search tool being hardcoded here by name.
+_BUILTIN_TOOLS = frozenset(
+    {"write_todos", "task", "ls", "read_file", "write_file", "edit_file", "glob", "grep"}
+)
+
+
+async def stream_report(agent, topic: str, panel: LiveActivityPanel | None = None) -> str:
+    """Stream a deep-agent run into a LiveActivityPanel and return its final report.
+
+    The async sibling of print_activity: the same astream(subgraphs=True) trick, but
+    the events drive a panel live instead of a timeline printed after the fact, and
+    the coordinator's last AI message comes back as plain text for a caller to speak.
+    Events with an empty namespace `ns` are the coordinator's; a non-empty `ns` is a
+    subagent's own subgraph — that is how each step is attributed to an actor.
+
+    Owns the panel's lifecycle, including on cancellation, so a session torn down
+    mid-research still stops the panel's heartbeat.
+    """
+    if panel is not None:
+        panel.start(topic)
+
+    report = ""
+    current_subagent = None
+    try:
+        async for ns, update in agent.astream(
+            {"messages": [{"role": "user", "content": topic}]},
+            stream_mode="updates",
+            subgraphs=True,
+        ):
+            scope = "coordinator" if not ns else (current_subagent or "subagent")
+            for payload in (update or {}).values():
+                messages = payload.get("messages", []) if isinstance(payload, dict) else []
+                for message in messages:
+                    for call in getattr(message, "tool_calls", None) or []:
+                        name, args = call["name"], (call["args"] or {})
+                        if name == "task":
+                            current_subagent = args.get("subagent_type", "subagent")
+                        if panel is None:
+                            continue
+                        if name == "write_todos":
+                            panel.plan(scope, args.get("todos", []))
+                        elif name == "task":
+                            panel.delegate(current_subagent)
+                        elif name not in _BUILTIN_TOOLS:
+                            panel.search(scope, args.get("query") or _summarize_args(args, 80))
+                    # The coordinator's own AI text is the spoken report; a subagent's
+                    # findings are an intermediate result the coordinator rewrites.
+                    if not ns and message.__class__.__name__ == "AIMessage":
+                        text = _plain_text(message.content)
+                        if text.strip():
+                            report = text
+        report = report or _NO_FINDINGS
+    finally:
+        if panel is not None:
+            panel.finish(report)
+    return report
 
 
 def show_file(path, code_style: str = _CODE_STYLE, limit: int | None = None) -> None:
