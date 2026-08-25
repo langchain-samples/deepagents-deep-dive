@@ -1,0 +1,149 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 880" role="img" aria-labelledby="title desc">
+  <title id="title">A realtime voice model delegating research to a deep agent</title>
+  <desc id="desc">Speech goes to Gemini Live, which answers small talk itself and calls a non-blocking deep_research tool for anything needing facts. A deep agent plans, delegates web search to a researcher subagent, and writes a short spoken report, which returns to the voice model to be narrated aloud.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/>
+    </marker>
+    <style>
+      .bg { fill: #f8fafc; }
+      .title { font: 700 34px Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 16px Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #64748b; }
+      .zone { fill: #ffffff; stroke: #e2e8f0; stroke-width: 2; }
+      .zone-label { font: 700 13px Inter, ui-sans-serif, system-ui, sans-serif; fill: #64748b; letter-spacing: .08em; }
+      .node { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2.5; }
+      .primary { fill: #eff6ff; stroke: #3b82f6; }
+      .subagent { fill: #ecfdf5; stroke: #10b981; }
+      .result { fill: #fffbeb; stroke: #f59e0b; }
+      .node-title { font: 700 19px Inter, ui-sans-serif, system-ui, sans-serif; fill: #0f172a; }
+      .node-text { font: 500 14px Inter, ui-sans-serif, system-ui, sans-serif; fill: #334155; }
+      .small { font: 600 12px Inter, ui-sans-serif, system-ui, sans-serif; fill: #475569; }
+      .mono { font: 600 13px ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace; fill: #0f172a; }
+      .edge { fill: none; stroke: #475569; stroke-width: 2.5; marker-end: url(#arrow); }
+      .edge-muted { fill: none; stroke: #94a3b8; stroke-width: 2.5; stroke-dasharray: 7 7; marker-end: url(#arrow-muted); }
+      .edge-label { font: 600 12px Inter, ui-sans-serif, system-ui, sans-serif; fill: #475569; }
+      .pill { fill: #e2e8f0; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1200" height="880"/>
+
+  <text x="600" y="62" text-anchor="middle" class="title">Deep Agents and Voice</text>
+  <text x="600" y="92" text-anchor="middle" class="subtitle">The voice model carries the conversation and hands the hard questions to a deep agent</text>
+
+  <g id="flow" transform="translate(50 130)">
+    <rect class="zone" x="0" y="0" width="1100" height="720" rx="30"/>
+
+    <!-- ── voice layer ─────────────────────────────────────────────── -->
+    <g id="you-speak" transform="translate(30 22)">
+      <rect class="node" width="190" height="92" rx="18"/>
+      <text x="95" y="36" text-anchor="middle" class="node-title" font-size="17">You speak</text>
+      <text x="95" y="62" text-anchor="middle" class="node-text">
+        <tspan x="95" dy="0">just talk — the server</tspan>
+        <tspan x="95" dy="18">detects when you stop</tspan>
+      </text>
+    </g>
+
+    <g id="gemini-live" transform="translate(350 8)">
+      <rect class="node primary" width="400" height="120" rx="22"/>
+      <text x="200" y="36" text-anchor="middle" class="node-title">Gemini Live</text>
+      <text x="200" y="62" text-anchor="middle" class="node-text">
+        <tspan x="200" dy="0">Realtime audio both ways, with server-side</tspan>
+        <tspan x="200" dy="19">voice-activity detection and live transcripts</tspan>
+      </text>
+      <rect x="24" y="86" width="352" height="26" rx="13" class="pill"/>
+      <text x="200" y="104" text-anchor="middle" class="small">answers directly · deep_research · end_conversation</text>
+    </g>
+
+    <g id="you-hear" transform="translate(880 22)">
+      <rect class="node" width="190" height="92" rx="18"/>
+      <text x="95" y="36" text-anchor="middle" class="node-title" font-size="17">You hear</text>
+      <text x="95" y="62" text-anchor="middle" class="node-text">
+        <tspan x="95" dy="0">the reply, spoken</tspan>
+        <tspan x="95" dy="18">conversationally</tspan>
+      </text>
+    </g>
+
+    <path class="edge" d="M 220 68 L 342 68"/>
+    <text x="281" y="54" text-anchor="middle" class="edge-label">16 kHz PCM</text>
+    <text x="281" y="142" text-anchor="middle" class="small" fill="#94a3b8">mic muted while it speaks</text>
+
+    <path class="edge" d="M 750 68 L 872 68"/>
+    <text x="811" y="54" text-anchor="middle" class="edge-label">24 kHz PCM</text>
+
+    <!-- ── branch 1: small talk ────────────────────────────────────── -->
+    <g id="small-talk" transform="translate(60 215)">
+      <rect class="node" width="330" height="86" rx="18"/>
+      <text x="165" y="34" text-anchor="middle" class="node-title" font-size="17">Small talk</text>
+      <text x="165" y="60" text-anchor="middle" class="node-text">
+        <tspan x="165" dy="0">Greetings and chit-chat, answered</tspan>
+        <tspan x="165" dy="18">from memory — no tools involved</tspan>
+      </text>
+    </g>
+
+    <path class="edge" d="M 440 128 C 418 166, 318 188, 248 211"/>
+    <text x="378" y="158" text-anchor="end" class="edge-label">small talk?</text>
+
+    <path class="edge-muted" d="M 392 242 C 452 228, 472 176, 480 133"/>
+    <text x="462" y="198" text-anchor="end" class="edge-label">straight back</text>
+
+    <!-- ── branch 2: research ──────────────────────────────────────── -->
+    <g id="deep-research" transform="translate(630 200)">
+      <rect class="node" width="400" height="96" rx="18"/>
+      <text x="200" y="34" text-anchor="middle" class="mono" font-size="17">deep_research(topic)</text>
+      <text x="200" y="58" text-anchor="middle" class="node-text">Declared to Live as a function it can call</text>
+      <rect x="46" y="66" width="308" height="24" rx="12" class="pill"/>
+      <text x="200" y="83" text-anchor="middle" class="small">NON_BLOCKING — the voice keeps flowing</text>
+    </g>
+
+    <path class="edge" d="M 690 128 C 716 152, 768 176, 806 196"/>
+    <text x="742" y="160" class="edge-label">needs facts, figures, sources?</text>
+
+    <path class="edge" d="M 830 296 L 830 344"/>
+    <text x="845" y="326" class="edge-label">topic</text>
+
+    <!-- ── the deep agent ──────────────────────────────────────────── -->
+    <g id="coordinator" transform="translate(630 350)">
+      <rect class="node subagent" width="400" height="104" rx="18"/>
+      <text x="200" y="34" text-anchor="middle" class="node-title" font-size="17">Coordinator · Claude</text>
+      <text x="200" y="60" text-anchor="middle" class="node-text">
+        <tspan x="200" dy="0">Calls write_todos to lay out a short plan,</tspan>
+        <tspan x="200" dy="18">then delegates the searching — it has no</tspan>
+        <tspan x="200" dy="18">search tool of its own</tspan>
+      </text>
+    </g>
+
+    <g id="researcher" transform="translate(630 500)">
+      <rect class="node subagent" width="400" height="104" rx="18"/>
+      <text x="200" y="34" text-anchor="middle" class="node-title" font-size="17">researcher subagent</text>
+      <text x="200" y="60" text-anchor="middle" class="node-text">
+        <tspan x="200" dy="0">Owns the Tavily tool. Runs 4–5 targeted</tspan>
+        <tspan x="200" dy="18">searches, cross-checks them, and returns</tspan>
+        <tspan x="200" dy="18">concise findings</tspan>
+      </text>
+    </g>
+
+    <path class="edge" d="M 750 454 L 750 494"/>
+    <text x="736" y="478" text-anchor="end" class="edge-label">task</text>
+
+    <path class="edge-muted" d="M 930 500 L 930 460"/>
+    <text x="944" y="482" class="edge-label">findings</text>
+
+    <!-- ── the spoken report ───────────────────────────────────────── -->
+    <g id="report" transform="translate(630 632)">
+      <rect class="node result" width="400" height="76" rx="18"/>
+      <text x="200" y="32" text-anchor="middle" class="node-title" font-size="17">Spoken report</text>
+      <text x="200" y="56" text-anchor="middle" class="node-text">3–5 plain sentences — no markdown, no URLs</text>
+    </g>
+
+    <path class="edge" d="M 1030 398 C 1078 404, 1078 618, 1036 648"/>
+    <text x="1042" y="380" class="edge-label">writes</text>
+
+    <path class="edge" d="M 630 668 C 512 664, 492 420, 498 300 C 502 208, 522 158, 543 133"/>
+    <text x="470" y="404" text-anchor="end" class="edge-label">narrated aloud</text>
+    <text x="470" y="424" text-anchor="end" class="small" fill="#94a3b8">scheduling=INTERRUPT</text>
+  </g>
+</svg>
