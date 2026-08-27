@@ -1,0 +1,22 @@
+deepagents-evals.ipynb
+  s_5775a2978e26fa::t_b91f87cb0d1e7a 1-965
+README.md
+  s_5775a2978e26fa::t_285b65637a391c 15,52,68-73,84-92
+  s_5775a2978e26fa::t_e0bb088952640a 93
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "1c80d2e182c8d9727b4c54b672904786732e6557",
+  "prompts": {},
+  "sessions": {
+    "s_5775a2978e26fa": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a040bb-0fe0-7f73-adee-a30e07d1dbe0",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Stephen Chu <stephen.chu@langchain.dev>"
+    }
+  }
+}
