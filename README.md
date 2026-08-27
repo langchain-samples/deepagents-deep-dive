@@ -12,6 +12,7 @@ work straight through or jump to the topic you care about.
   - [Environment variables](#environment-variables)
 - [Notebooks](#notebooks)
   - [Basics](#basics)
+  - [Evaluations](#evaluations)
   - [Skills and AGENTS.md](#skills-and-agentsmd)
   - [Sandboxes](#sandboxes)
   - [Interpreters and programmatic tool calling](#interpreters-and-programmatic-tool-calling)
@@ -48,7 +49,7 @@ your shell — edit it mid-session and the change takes effect on the next run.
 | Variable | Needed by |
 | --- | --- |
 | `ANTHROPIC_API_KEY` | All notebooks |
-| `LANGSMITH_API_KEY`, `LANGSMITH_TRACING`, `LANGSMITH_PROJECT`, `LANGSMITH_WORKSPACE_ID` | Tracing, and the LangSmith sandbox backend |
+| `LANGSMITH_API_KEY`, `LANGSMITH_TRACING`, `LANGSMITH_PROJECT`, `LANGSMITH_WORKSPACE_ID` | Tracing, evaluations, and the LangSmith sandbox backend |
 | `TAVILY_API_KEY` | Web search in the async and voice notebooks |
 | `GEMINI_API_KEY` or `GOOGLE_API_KEY` | Voice |
 | `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `S3_BUCKET`, `S3_REGION` | The S3 mount section of Sandboxes |
@@ -64,11 +65,12 @@ Suggested order — later notebooks assume the vocabulary of earlier ones.
 | # | Notebook | Topic |
 | --- | --- | --- |
 | 1 | `deepagents-basics.ipynb` | Core anatomy of a deep agent |
-| 2 | `deepagents-skills.ipynb` | Skills and `AGENTS.md` memory |
-| 3 | `deepagents-sandboxes.ipynb` | Executing real code safely |
-| 4 | `deepagents-interpreters-ptc.ipynb` | Programmatic tool calling |
-| 5 | `deepagents-async.ipynb` | Background subagents |
-| 6 | `deepagents-voice.ipynb` | A realtime voice front end |
+| 2 | `deepagents-evals.ipynb` | Offline evaluation with LangSmith |
+| 3 | `deepagents-skills.ipynb` | Skills and `AGENTS.md` memory |
+| 4 | `deepagents-sandboxes.ipynb` | Executing real code safely |
+| 5 | `deepagents-interpreters-ptc.ipynb` | Programmatic tool calling |
+| 6 | `deepagents-async.ipynb` | Background subagents |
+| 7 | `deepagents-voice.ipynb` | A realtime voice front end |
 
 ### Basics
 
@@ -78,6 +80,16 @@ A deep agent is a regular agent plus a TODO list, subagents, and a filesystem. C
 planning tool, task delegation, dictionary vs. compiled subagents, and the backend family —
 default (thread-scoped state), `StoreBackend`, `FilesystemBackend`, and `CompositeBackend` — closing
 on context isolation and context-management techniques.
+
+### Evaluations
+
+`deepagents-evals.ipynb`
+
+A Kyoto travel concierge turns one convincing demo into a repeatable offline LangSmith experiment.
+Three traveler profiles share one deterministic activity catalog, while two focused evaluators score
+the result: a structured LLM judge grades the user-facing itinerary for format and constraint-following,
+and a deterministic evaluator verifies that the supervisor response matches the backing
+`/itinerary.md` artifact.
 
 ### Skills and AGENTS.md
 
