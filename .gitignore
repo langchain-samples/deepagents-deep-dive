@@ -7,9 +7,13 @@ wheels/
 *.egg-info
 
 # Virtual environments
-.venv
+.venv/
+node_modules/
 
+# Local environment files
 .env
+.env.*
+!.env.example
 
 # Secrets / credentials
 *.pem
