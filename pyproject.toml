@@ -12,6 +12,7 @@ dependencies = [
     "ipywidgets>=8.1.0",
     "langgraph-cli[inmem]>=0.4.30",
     "langsmith[sandbox]>=0.9.4",
+    "notebook>=7.5,<8",
     "numpy>=2.0.0",
     "python-dotenv>=1.2.2",
     "sounddevice>=0.5.0",

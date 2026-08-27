@@ -30,9 +30,11 @@ work straight through or jump to the topic you care about.
 
 ```bash
 uv sync
+uv run jupyter notebook
 ```
 
-Then point your notebook kernel at the project's `.venv`.
+This starts the copy of Jupyter installed in the project's `.venv`, so the notebooks automatically
+use the same environment as the project dependencies.
 
 ### Environment variables
 
