@@ -1,10 +1,12 @@
 from util.pretty import (
     LiveActivityPanel,
+    harness_tools,
     pretty_print,
     pretty_print_with_code,
     print_activity,
     print_exchange,
     print_last_exchange,
+    print_todo_progress,
     print_todos,
     render_content,
     render_content_with_code,
@@ -39,11 +41,13 @@ from util.voice import (
 
 __all__ = [
     "LiveActivityPanel",
+    "harness_tools",
     "pretty_print",
     "pretty_print_with_code",
     "print_activity",
     "print_exchange",
     "print_last_exchange",
+    "print_todo_progress",
     "print_todos",
     "render_content",
     "render_content_with_code",

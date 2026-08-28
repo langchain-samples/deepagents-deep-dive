@@ -266,7 +266,59 @@ def print_activity(
     display(Markdown("\n".join(lines)))
 
 
+def harness_tools(agent) -> list[str]:
+    """List the tool names a compiled deep agent actually binds to its model.
+
+    The notebooks use this to show what a piece of middleware contributes, rather
+    than asking the model to introspect itself — a model listing its own tools is a
+    self-report, and self-reports can be wrong.
+    """
+    return sorted(agent.nodes["tools"].bound.tools_by_name)
+
+
 _TODO_MARKERS = {"pending": "☐", "in_progress": "▶", "completed": "☑"}
+
+
+def _todo_lines(todos) -> list[str]:
+    lines = []
+    for todo in todos:
+        status = todo["status"]
+        marker = _TODO_MARKERS.get(status, "•")
+        content = todo["content"]
+        if status == "completed":
+            content = f"~~{content}~~"
+        lines.append(f"- {marker} {content} — *{status.replace('_', ' ')}*")
+    return lines
+
+
+def print_todo_progress(agent, user_input, config=None, title="Plan revisions") -> None:
+    """Stream a run and render every `write_todos` snapshot the agent writes.
+
+    The final state only ever shows a list of completed items. Rendering each
+    revision is the only way to watch a todo move ☐ pending → ▶ in progress →
+    ☑ completed, which is the half of the tool that plan-creation demos miss.
+    """
+    if isinstance(user_input, str):
+        user_input = {"messages": [{"role": "user", "content": user_input}]}
+
+    lines = [f"### {title}", ""]
+    revision = 0
+    for update in agent.stream(user_input, config=config, stream_mode="updates"):
+        for payload in (update or {}).values():
+            messages = payload.get("messages", []) if isinstance(payload, dict) else []
+            for message in messages:
+                for call in getattr(message, "tool_calls", None) or []:
+                    if call["name"] != "write_todos":
+                        continue
+                    revision += 1
+                    lines.append(f"**Revision {revision}**")
+                    lines.append("")
+                    lines.extend(_todo_lines(call["args"].get("todos", [])))
+                    lines.append("")
+
+    if revision == 0:
+        lines.append("*The agent never called `write_todos`.*")
+    display(Markdown("\n".join(lines)))
 
 
 def print_todos(result) -> None:
@@ -276,16 +328,7 @@ def print_todos(result) -> None:
         display(Markdown("*No todos.*"))
         return
 
-    lines = ["### Todo list", ""]
-    for todo in todos:
-        status = todo["status"]
-        marker = _TODO_MARKERS.get(status, "•")
-        content = todo["content"]
-        if status == "completed":
-            content = f"~~{content}~~"
-        label = status.replace("_", " ")
-        lines.append(f"- {marker} {content} — *{label}*")
-    display(Markdown("\n".join(lines)))
+    display(Markdown("\n".join(["### Todo list", "", *_todo_lines(todos)])))
 
 
 _STATUS_COLOR = {"pending": "#8a8a8a", "in_progress": "#1f6feb", "completed": "#2b8a3e"}
@@ -399,9 +442,9 @@ class LiveActivityPanel:
             # rather than leave a progress word standing over a completed run.
             plan_html = ""
         else:
-            # Live, but nothing to show yet. Only the coordinator is asked to plan;
-            # a subagent that just searches never writes todos, so calling its state
-            # "planning" would be a permanent lie.
+            # Live, but nothing to show yet. Only the coordinator carries
+            # TodoListMiddleware, so a subagent has no write_todos tool at all and
+            # calling its state "planning" would be a permanent lie.
             waiting = "planning…" if scope == "coordinator" else "working…"
             plan_html = f"<div style='margin-left:30px;color:#8a8a8a;'>{waiting}</div>"
 
@@ -450,11 +493,23 @@ def _plain_text(content) -> str:
 
 _NO_FINDINGS = "I couldn't find anything useful on that."
 
-# Deep agents ship planning and filesystem tools of their own. The panel's activity
-# lane is for the *research* work, so the built-ins are filtered out of it rather
-# than the caller's search tool being hardcoded here by name.
+# Deep agents ship filesystem, delegation, and (when opted in) planning tools of
+# their own. The panel's activity lane is for the *research* work, so the built-ins
+# are filtered out of it rather than the caller's search tool being hardcoded here
+# by name.
 _BUILTIN_TOOLS = frozenset(
-    {"write_todos", "task", "ls", "read_file", "write_file", "edit_file", "glob", "grep"}
+    {
+        "write_todos",
+        "task",
+        "ls",
+        "read_file",
+        "write_file",
+        "edit_file",
+        "delete",
+        "glob",
+        "grep",
+        "execute",
+    }
 )
 
 
