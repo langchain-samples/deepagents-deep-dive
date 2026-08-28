@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "boto3>=1.43.40",
-    "deepagents[quickjs]>=0.6.12",
+    "deepagents[quickjs]>=0.7.10",
     "google-genai>=2.10.0",
     "ipykernel>=7.3.0",
     "ipywidgets>=8.1.0",
