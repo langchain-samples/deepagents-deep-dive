@@ -26,6 +26,8 @@ work straight through or jump to the topic you care about.
 
 - Python 3.13 (see `.python-version`)
 - [uv](https://docs.astral.sh/uv/) for dependency management
+- `deepagents` >= 0.7 &mdash; task planning became opt-in in 0.7, and the notebooks are
+  written against that behaviour
 
 ### Install
 
@@ -78,10 +80,12 @@ Suggested order — later notebooks assume the vocabulary of earlier ones.
 
 `deepagents-basics.ipynb`
 
-A deep agent is a regular agent plus a TODO list, subagents, and a filesystem. Covers the built-in
-planning tool, task delegation, dictionary vs. compiled subagents, and the backend family —
-default (thread-scoped state), `StoreBackend`, `FilesystemBackend`, and `CompositeBackend` — closing
-on context isolation and context-management techniques.
+A deep agent is a regular agent plus subagents, a filesystem, and — since 0.7, only if you ask
+for it — a TODO list. Opens on that opt-in: the same agent before and after
+`middleware=[TodoListMiddleware()]`, then a plan that actually moves ☐ → ▶ → ☑. Goes on to task
+delegation, dictionary vs. compiled subagents, and the backend family — default (thread-scoped
+state), `StoreBackend`, `FilesystemBackend`, and `CompositeBackend` — closing on context isolation
+and context-management techniques.
 
 ### Evaluations
 
@@ -141,7 +145,9 @@ uv run langgraph dev
 
 A realtime voice layer over a deep agent, driven straight from the `google-genai` Live API with no
 web stack. The deep agent is exposed as a single `deep_research` tool that the voice model calls and
-narrates. Covers audio plumbing, the realtime loop, and server VAD with barge-in.
+narrates. Covers audio plumbing, the realtime loop, and server VAD with barge-in. This is the other
+notebook that opts into `TodoListMiddleware`, for the reason the docs recommend it: the activity
+panel is a progress UI streaming the coordinator's `todos` straight off agent state.
 
 > **Note:** This notebook needs a working microphone and speaker, and installs `sounddevice`.
 
