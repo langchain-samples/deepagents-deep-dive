@@ -580,6 +580,27 @@ def show_file(path, code_style: str = _CODE_STYLE, limit: int | None = None) -> 
     display(Markdown(f"**`{path}`**\n\n{_highlight(text, _lang_for(path.name), code_style)}"))
 
 
+def show_store(store, namespace, title=None) -> None:
+    """Render every file a LangGraph store holds under one namespace.
+
+    The point of a routed backend is that the agent sees one flat filesystem while
+    the bytes land in different places. This prints the other side of that illusion
+    — the real store keys — which is where the route prefix turns out to have been
+    stripped.
+    """
+    items = sorted(store.search(namespace), key=lambda i: i.key)
+    heading = title or f"store namespace `{namespace}`"
+    if not items:
+        display(Markdown(f"**{heading}** — *empty*"))
+        return
+
+    blocks = [f"**{heading}** — {len(items)} file(s)\n"]
+    for item in items:
+        content = (item.value or {}).get("content", "")
+        blocks.append(f"`{item.key}`\n\n{_highlight(content, 'markdown', 'xcode')}")
+    display(Markdown("\n".join(blocks)))
+
+
 _TREE_SKIP = {"__pycache__", ".DS_Store", ".ipynb_checkpoints"}
 
 

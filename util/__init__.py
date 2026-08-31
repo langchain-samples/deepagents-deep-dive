@@ -12,6 +12,7 @@ from util.pretty import (
     render_content_with_code,
     show_eval_code,
     show_file,
+    show_store,
     show_tree,
     stream_report,
 )
@@ -53,6 +54,7 @@ __all__ = [
     "render_content_with_code",
     "show_eval_code",
     "show_file",
+    "show_store",
     "show_tree",
     "stream_report",
     "load_skill_metadata",
