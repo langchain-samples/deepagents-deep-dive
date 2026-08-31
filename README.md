@@ -14,6 +14,7 @@ work straight through or jump to the topic you care about.
   - [Basics](#basics)
   - [Evaluations](#evaluations)
   - [Skills and AGENTS.md](#skills-and-agentsmd)
+  - [Memory architecture](#memory-architecture)
   - [Sandboxes](#sandboxes)
   - [Interpreters and programmatic tool calling](#interpreters-and-programmatic-tool-calling)
   - [Async subagents](#async-subagents)
@@ -71,10 +72,11 @@ Suggested order — later notebooks assume the vocabulary of earlier ones.
 | 1 | `deepagents-basics.ipynb` | Core anatomy of a deep agent |
 | 2 | `deepagents-evals.ipynb` | Offline evaluation with LangSmith |
 | 3 | `deepagents-skills.ipynb` | Skills and `AGENTS.md` memory |
-| 4 | `deepagents-sandboxes.ipynb` | Executing real code safely |
-| 5 | `deepagents-interpreters-ptc.ipynb` | Programmatic tool calling |
-| 6 | `deepagents-async.ipynb` | Background subagents |
-| 7 | `deepagents-voice.ipynb` | A realtime voice front end |
+| 4 | `deepagents-memory-architecture.ipynb` | Routing memory by scope and owner |
+| 5 | `deepagents-sandboxes.ipynb` | Executing real code safely |
+| 6 | `deepagents-interpreters-ptc.ipynb` | Programmatic tool calling |
+| 7 | `deepagents-async.ipynb` | Background subagents |
+| 8 | `deepagents-voice.ipynb` | A realtime voice front end |
 
 ### Basics
 
@@ -107,6 +109,23 @@ activation, and `references/` only when the body points at them. **`AGENTS.md`**
 into every prompt. Built around an on-call assistant that delegates alerts to a triage specialist,
 and demonstrates that subagents inherit neither skills nor memory — plus a writable `notes.md` whose
 correction survives across threads, processes, and agent objects.
+
+### Memory architecture
+
+`deepagents-memory-architecture.ipynb`
+
+Where Skills covers *what* to give an agent, this covers *where it lives and who owns it*.
+One agent, one filesystem, three memory types routed by `CompositeBackend` to different
+backends: per-user preferences, an org-wide policy file the agent is blocked from editing,
+and per-user skills — with anything unmatched falling through to thread-scoped state. Each
+property is proved against the store rather than the model's say-so: Alice and Bob never
+see each other's memory, a write to `/policies/` is refused by the harness even when the
+prompt does not forbid it, and a preference mentioned in passing survives into a brand-new
+thread.
+
+> Note the routing gotcha it documents: `CompositeBackend` **strips** the route prefix
+> before handing the key to the backend, so `/memories/preferences.md` is stored under
+> `/preferences.md`. Seed the full path and reads miss silently.
 
 ### Sandboxes
 
@@ -162,7 +181,7 @@ panel is a progress UI streaming the coordinator's `todos` straight off agent st
 │   ├── memory/notes.md     #   writable learned preferences
 │   └── skills/             #   per-agent skill sources
 ├── util/                   # notebook helpers (not part of the lesson)
-│   ├── pretty.py           #   activity timelines, exchanges, file/tree display
+│   ├── pretty.py           #   activity timelines, exchanges, file/tree/store display
 │   ├── skills.py           #   skill and memory catalogs
 │   ├── stats.py            #   token and tool-call stats
 │   ├── charts.py           #   comparison bars
