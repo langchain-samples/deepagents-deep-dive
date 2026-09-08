@@ -58,7 +58,7 @@ your shell — edit it mid-session and the change takes effect on the next run.
 | `TAVILY_API_KEY` | Web search in the async and voice notebooks |
 | `GEMINI_API_KEY` or `GOOGLE_API_KEY` | Voice |
 | `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `S3_BUCKET`, `S3_REGION` | The S3 mount section of Sandboxes |
-| `OPENAI_API_KEY` | Optional, for swapping models |
+| `OPENAI_API_KEY` | The OpenAI half of the model comparison in Evaluations |
 
 > **Note:** The AWS/S3 variables are only needed for the mount section of the Sandboxes notebook.
 > Every other notebook runs without them.
@@ -70,7 +70,7 @@ Suggested order — later notebooks assume the vocabulary of earlier ones.
 | # | Notebook | Topic |
 | --- | --- | --- |
 | 1 | `deepagents-basics.ipynb` | Core anatomy of a deep agent |
-| 2 | `deepagents-evals.ipynb` | Offline evaluation with LangSmith |
+| 2 | `deepagents-evals-v2.ipynb` | Offline evaluation with LangSmith |
 | 3 | `deepagents-skills.ipynb` | Skills and `AGENTS.md` memory |
 | 4 | `deepagents-memory-architecture.ipynb` | Routing memory by scope and owner |
 | 5 | `deepagents-sandboxes.ipynb` | Executing real code safely |
@@ -91,13 +91,24 @@ and context-management techniques.
 
 ### Evaluations
 
-`deepagents-evals.ipynb`
+`deepagents-evals-v2.ipynb`
 
-A Kyoto travel concierge turns one convincing demo into a repeatable offline LangSmith experiment.
-Three traveler profiles share one deterministic activity catalog, while two focused evaluators score
-the result: a structured LLM judge grades the user-facing itinerary for format and constraint-following,
-and a deterministic evaluator verifies that the supervisor response matches the backing
-`/itinerary.md` artifact.
+A support-triage agent turns one convincing demo into a repeatable offline LangSmith experiment. A
+supervisor delegates each ticket to a specialist that reads a fixed policy and writes
+`/triage.json`; the supervisor reads that file back and reports a line for the on-call engineer.
+Two agents, two artifacts — and that split is what the lesson turns on, because each one needs
+a different kind of evaluator. `schema_valid` and `triage_accuracy` are ordinary code grading the
+JSON; `summary_quality` is an LLM judge asking whether the prose still says what the file says.
+
+The same dataset and evaluators then run twice, once on `claude-haiku-4-5-20251001` and once on
+OpenAI's `gpt-5.4-mini`, with the judge pinned to one model so the two runs stay comparable. Four of
+the six tickets are written so the surface phrasing points at the wrong answer — a safety
+question that is not a security incident, a failed payment delivered as an angry bug report —
+and each carries metadata marking it, so an experiment can be grouped by `trap` in the LangSmith UI.
+
+> The comparison comes back flat: both models score alike. The notebook treats that as a result
+> rather than a bug, which is the point — an experiment that finds no difference has still
+> answered its question.
 
 ### Skills and AGENTS.md
 
@@ -176,6 +187,8 @@ panel is a progress UI streaming the coordinator's `todos` straight off agent st
 ├── deepagents-*.ipynb      # the deep-dive notebooks
 ├── async_agents/           # graph served to the async notebook
 │   └── researcher.py
+├── data/                   # dataset rows kept out of the notebooks
+│   └── support_tickets.jsonl  # the evals dataset, one example per line
 ├── oncall_home/            # fixtures for the skills notebook
 │   ├── AGENTS.md           #   always-loaded conventions
 │   ├── memory/notes.md     #   writable learned preferences
@@ -185,10 +198,13 @@ panel is a progress UI streaming the coordinator's `todos` straight off agent st
 │   ├── skills.py           #   skill and memory catalogs
 │   ├── stats.py            #   token and tool-call stats
 │   ├── charts.py           #   comparison bars
-│   └── voice.py            #   mic and speaker streams
+│   ├── voice.py            #   mic and speaker streams
+│   └── triage_dataset.py   #   loads (and policy-checks) the evals dataset
 ├── images/                 # rendered notebook artifacts
 └── langgraph.json          # graph config for `langgraph dev`
 ```
 
 `util/` exists to keep the notebooks readable — the rendering helpers live there so each cell shows
-the Deep Agents API and nothing else.
+the Deep Agents API and nothing else. `triage_dataset.py` is there for the same reason: it loads the
+rows from `data/`, and checks on the way that every reference answer still follows from the policy
+the agent is handed, so a dataset edit cannot quietly disagree with the policy.
