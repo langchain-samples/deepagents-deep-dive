@@ -266,6 +266,63 @@ def print_activity(
     display(Markdown("\n".join(lines)))
 
 
+def print_tool_trace(result, title="Tool trace", max_len=90) -> None:
+    """Render the tool calls and results in a finished run's messages.
+
+    print_activity streams a live run to tell supervisor from subagent; this is the
+    after-the-fact view of one agent, where what matters is each call's outcome —
+    a harness refusal is marked apart from an ordinary result.
+    """
+    lines = [f"### {title}", ""]
+    for message in result["messages"]:
+        for call in getattr(message, "tool_calls", None) or []:
+            lines.append(f"- → 🔧 **{call['name']}**({_summarize_args(call['args'], max_len)})")
+        if message.type == "tool":
+            content = _truncate(str(message.content).splitlines()[0], max_len)
+            denied = getattr(message, "status", "") == "error" or content.startswith("Error")
+            icon, body = ("⛔", f"*{content}*") if denied else ("📥", content)
+            lines.append(f"- ← {icon} `{message.name}` → {body}")
+    display(Markdown("\n".join(lines)))
+
+
+def print_path_checks(checks, title="Path validation") -> None:
+    """Render validate_path outcomes as an allowed/rejected list.
+
+    `checks` is an iterable of (path, ok, detail) triples, where detail is the
+    normalized path when ok and the ValueError text when not.
+    """
+    lines = [f"### {title}", ""]
+    for path, ok, detail in checks:
+        icon, verb = ("✅", "allowed") if ok else ("⛔", "rejected")
+        rendered = f"`{detail}`" if ok else f"*{detail}*"
+        lines.append(f"- {icon} **{verb}** `{path}` → {rendered}")
+    display(Markdown("\n".join(lines)))
+
+
+_USER_ICONS = ("🧑‍🦰", "🧑‍🦱", "🧑‍🦳", "🧑‍🦲")
+
+
+def print_per_user_answers(
+    answers, question=None, title="Same agent, different memory", verb="answers"
+) -> None:
+    """Render one bullet per user: who asked, the namespace their files came from,
+    and the answer that namespace produced.
+
+    Same timeline look as print_activity, but here the answers *are* the finding —
+    the reader is comparing them — so they are quoted in full, not truncated.
+    `answers` is an iterable of (who, namespace, answer) triples.
+    """
+    lines = [f"### {title}", ""]
+    if question:
+        lines += [f"💬 *{question}*", ""]
+    for index, (who, namespace, answer) in enumerate(answers):
+        icon = _USER_ICONS[index % len(_USER_ICONS)]
+        lines.append(f"- {icon} **{who}** 🗂️ `{namespace}` ← 🧠 {verb}")
+        lines += [f"  > {line}".rstrip() for line in str(answer).strip().splitlines()]
+        lines.append("")
+    display(Markdown("\n".join(lines)))
+
+
 def harness_tools(agent) -> list[str]:
     """List the tool names a compiled deep agent actually binds to its model.
 
