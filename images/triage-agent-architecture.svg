@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 860" role="img" aria-labelledby="title desc">
+  <title id="title">Support triage agent architecture and its two evaluation paths</title>
+  <desc id="desc">One inbound support ticket enters a supervisor, which delegates to a triage specialist. The specialist consults a policy tool and writes a strictly shaped JSON artifact. The supervisor reads that artifact back and reports a one-line brief. The JSON artifact is graded by deterministic code evaluators; the prose brief is graded by an LLM judge.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <style>
+      .bg { fill: #f8fafc; }
+      .title { font: 700 34px Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 16px Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #64748b; }
+      .zone { fill: #ffffff; stroke: #e2e8f0; stroke-width: 2; rx: 28; }
+      .zone-label { font: 700 13px Inter, ui-sans-serif, system-ui, sans-serif; fill: #94a3b8; letter-spacing: .08em; }
+      .node { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2.5; rx: 18; }
+      .primary { fill: #eff6ff; stroke: #3b82f6; }
+      .subagent { fill: #ecfdf5; stroke: #10b981; }
+      .result { fill: #fffbeb; stroke: #f59e0b; }
+      .evaluator { fill: #faf5ff; stroke: #a855f7; }
+      .node-title { font: 700 19px Inter, ui-sans-serif, system-ui, sans-serif; fill: #0f172a; }
+      .node-text { font: 500 14px Inter, ui-sans-serif, system-ui, sans-serif; fill: #334155; }
+      .mono { font: 600 17px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; fill: #0f172a; }
+      .mono-sm { font: 600 14px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; fill: #334155; }
+      .small { font: 600 12px Inter, ui-sans-serif, system-ui, sans-serif; fill: #475569; }
+      .edge { fill: none; stroke: #475569; stroke-width: 2.5; marker-end: url(#arrow); }
+      .edge-muted { fill: none; stroke: #94a3b8; stroke-width: 2.5; stroke-dasharray: 7 7; marker-end: url(#arrow); }
+      .edge-label { font: 600 12px Inter, ui-sans-serif, system-ui, sans-serif; fill: #475569; }
+      .divider { fill: none; stroke: #e2e8f0; stroke-width: 2; stroke-dasharray: 6 8; }
+      .pill { fill: #e2e8f0; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1200" height="860"/>
+
+  <text x="600" y="62" text-anchor="middle" class="title">Support Triage Agent</text>
+  <text x="600" y="92" text-anchor="middle" class="subtitle">Two agents leave behind two artifacts &#8212; and each one needs a different kind of evaluator</text>
+
+  <g id="workspace" transform="translate(50 130)">
+    <rect class="zone" x="0" y="0" width="1100" height="680" rx="30"/>
+
+    <!-- Input -->
+    <g id="ticket" transform="translate(390 10)">
+      <rect class="node" width="320" height="64" rx="18"/>
+      <text x="160" y="28" text-anchor="middle" class="node-title" font-size="18">Inbound Ticket</text>
+      <text x="160" y="50" text-anchor="middle" class="node-text">One support ticket &#8212; one dataset example</text>
+    </g>
+
+    <!-- Supervisor -->
+    <g id="supervisor" transform="translate(380 104)">
+      <rect class="node primary" width="340" height="120" rx="24"/>
+      <text x="170" y="34" text-anchor="middle" class="node-title">Supervisor</text>
+      <text x="170" y="60" text-anchor="middle" class="node-text">
+        <tspan x="170" dy="0">Delegates the ticket, reads the artifact</tspan>
+        <tspan x="170" dy="19">back, and writes the on-call brief</tspan>
+      </text>
+      <rect x="48" y="80" width="244" height="26" rx="13" class="pill"/>
+      <text x="170" y="98" text-anchor="middle" class="small">triage lead &#8226; classifies nothing itself</text>
+    </g>
+
+    <!-- Policy tool -->
+    <g id="policy" transform="translate(110 282)">
+      <rect class="node" width="200" height="76" rx="18"/>
+      <text x="100" y="30" text-anchor="middle" class="mono">lookup_policy</text>
+      <text x="100" y="54" text-anchor="middle" class="node-text">Labels and priority rules</text>
+    </g>
+
+    <!-- Specialist -->
+    <g id="specialist" transform="translate(380 266)">
+      <rect class="node subagent" width="340" height="108" rx="18"/>
+      <text x="170" y="34" text-anchor="middle" class="node-title" font-size="18">triage-specialist</text>
+      <text x="170" y="60" text-anchor="middle" class="node-text">
+        <tspan x="170" dy="0">Applies the policy to the ticket</tspan>
+        <tspan x="170" dy="19">and writes one JSON answer for it</tspan>
+      </text>
+    </g>
+
+    <!-- Artifacts -->
+    <g id="artifact-json" transform="translate(140 430)">
+      <rect class="node result" width="300" height="78" rx="18"/>
+      <text x="150" y="32" text-anchor="middle" class="mono">/triage.json</text>
+      <text x="150" y="58" text-anchor="middle" class="node-text">Strictly shaped, machine-readable</text>
+    </g>
+
+    <g id="artifact-brief" transform="translate(660 430)">
+      <rect class="node result" width="300" height="78" rx="18"/>
+      <text x="150" y="31" text-anchor="middle" class="node-title" font-size="18">Supervisor Brief</text>
+      <text x="150" y="58" text-anchor="middle" class="node-text">Prose for the on-call engineer</text>
+    </g>
+
+    <!-- Evaluation layer -->
+    <path class="divider" d="M 40 542 L 1060 542"/>
+    <text x="40" y="534" class="zone-label">OFFLINE EVALUATION</text>
+
+    <g id="code-evals" transform="translate(140 560)">
+      <rect class="node evaluator" width="300" height="92" rx="18"/>
+      <text x="150" y="30" text-anchor="middle" class="node-title" style="font-size:18px">Code evaluators</text>
+      <text x="150" y="56" text-anchor="middle" class="mono-sm">
+        <tspan x="150" dy="0">schema_valid</tspan>
+        <tspan x="150" dy="20">triage_accuracy</tspan>
+      </text>
+    </g>
+
+    <g id="judge-eval" transform="translate(660 560)">
+      <rect class="node evaluator" width="300" height="92" rx="18"/>
+      <text x="150" y="30" text-anchor="middle" class="node-title" style="font-size:18px">LLM judge</text>
+      <text x="150" y="56" text-anchor="middle" class="mono-sm">summary_quality</text>
+      <text x="150" y="78" text-anchor="middle" class="small">grades the prose, not the labels</text>
+    </g>
+
+    <!-- Edges -->
+    <path class="edge" d="M 550 74 L 550 104"/>
+
+    <path class="edge" d="M 550 224 L 550 266"/>
+    <text x="566" y="250" class="edge-label">delegate</text>
+
+    <path class="edge" d="M 310 320 L 380 320"/>
+    <text x="316" y="310" class="edge-label">policy</text>
+
+    <path class="edge" d="M 440 374 C 400 402, 360 412, 320 430"/>
+    <text x="452" y="398" class="edge-label">writes</text>
+
+    <path class="edge-muted" d="M 140 462 C 50 440, 48 170, 380 164"/>
+    <text x="58" y="300" class="edge-label">reads</text>
+
+    <path class="edge" d="M 720 172 C 918 178, 968 340, 872 430"/>
+    <text x="900" y="300" class="edge-label">reports</text>
+
+    <path class="edge" d="M 290 508 L 290 560"/>
+    <text x="302" y="542" class="edge-label">graded by</text>
+
+    <path class="edge" d="M 810 508 L 810 560"/>
+    <text x="822" y="542" class="edge-label">graded by</text>
+  </g>
+</svg>
