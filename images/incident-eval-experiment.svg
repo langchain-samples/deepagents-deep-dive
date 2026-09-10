@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 430" role="img" aria-labelledby="title desc">
+  <title id="title">Two controlled offline experiments</title>
+  <desc id="desc">Six paired examples pass through a target factory. The same deep-agent design runs on two models. Both experiments use the same code evaluator and LLM judge before their scores, latency, tokens, and cost are compared.</desc>
+  <defs>
+    <marker id="arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#475569"/></marker>
+    <style>
+      .bg{fill:#f8fafc}.box{fill:#fff;stroke:#cbd5e1;stroke-width:2.5}.data{fill:#ecfdf5;stroke:#10b981}.target{fill:#eff6ff;stroke:#3b82f6}.eval{fill:#faf5ff;stroke:#a855f7}.result{fill:#fffbeb;stroke:#f59e0b}
+      .title{font:700 30px Inter,system-ui,sans-serif;fill:#0f172a}.label{font:700 17px Inter,system-ui,sans-serif;fill:#0f172a}.text{font:500 13px Inter,system-ui,sans-serif;fill:#475569}.mono{font:600 13px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#334155}.edge{fill:none;stroke:#475569;stroke-width:2.5;marker-end:url(#arrow2)}
+    </style>
+  </defs>
+  <rect class="bg" width="1200" height="430"/>
+  <text class="title" x="600" y="48" text-anchor="middle">Two controlled experiments</text>
+
+  <g transform="translate(40 150)">
+    <rect class="box data" width="210" height="112" rx="18"/>
+    <text class="label" x="105" y="34" text-anchor="middle">Dataset</text>
+    <text class="text" x="105" y="61" text-anchor="middle">6 incidents</text>
+    <text class="text" x="105" y="83" text-anchor="middle">3 counterfactual pairs</text>
+  </g>
+
+  <g transform="translate(315 150)">
+    <rect class="box target" width="210" height="112" rx="18"/>
+    <text class="mono" x="105" y="38" text-anchor="middle">make_target(model)</text>
+    <text class="text" x="105" y="67" text-anchor="middle">same agent design</text>
+    <text class="text" x="105" y="89" text-anchor="middle">one model per experiment</text>
+  </g>
+
+  <g transform="translate(590 82)">
+    <rect class="box" width="235" height="88" rx="18"/>
+    <text class="label" x="118" y="34" text-anchor="middle">Anthropic config</text>
+    <text class="text" x="118" y="61" text-anchor="middle">6 runs</text>
+  </g>
+  <g transform="translate(590 245)">
+    <rect class="box" width="235" height="88" rx="18"/>
+    <text class="label" x="118" y="34" text-anchor="middle">OpenAI config</text>
+    <text class="text" x="118" y="61" text-anchor="middle">6 runs</text>
+  </g>
+
+  <g transform="translate(890 115)">
+    <rect class="box eval" width="265" height="184" rx="18"/>
+    <text class="label" x="133" y="36" text-anchor="middle">Same evaluators</text>
+    <text class="mono" x="133" y="74" text-anchor="middle">investigation_correct</text>
+    <text class="mono" x="133" y="104" text-anchor="middle">response_quality</text>
+    <line x1="30" y1="126" x2="235" y2="126" stroke="#e2e8f0" stroke-width="2"/>
+    <text class="text" x="133" y="153" text-anchor="middle">compare scores, time,</text>
+    <text class="text" x="133" y="173" text-anchor="middle">tokens, and cost</text>
+  </g>
+
+  <path class="edge" d="M250 206H315"/>
+  <path class="edge" d="M525 206C555 206 555 126 590 126"/>
+  <path class="edge" d="M525 206C555 206 555 289 590 289"/>
+  <path class="edge" d="M825 126H890"/>
+  <path class="edge" d="M825 289H890"/>
+</svg>

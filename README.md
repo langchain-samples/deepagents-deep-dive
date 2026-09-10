@@ -93,22 +93,10 @@ and context-management techniques.
 
 `deepagents-evals-v2.ipynb`
 
-A support-triage agent turns one convincing demo into a repeatable offline LangSmith experiment. A
-supervisor delegates each ticket to a specialist that reads a fixed policy and writes
-`/triage.json`; the supervisor reads that file back and reports a line for the on-call engineer.
-Two agents, two artifacts — and that split is what the lesson turns on, because each one needs
-a different kind of evaluator. `schema_valid` and `triage_accuracy` are ordinary code grading the
-JSON; `summary_quality` is an LLM judge asking whether the prose still says what the file says.
-
-The same dataset and evaluators then run twice, once on `claude-haiku-4-5-20251001` and once on
-OpenAI's `gpt-5.4-mini`, with the judge pinned to one model so the two runs stay comparable. Four of
-the six tickets are written so the surface phrasing points at the wrong answer — a safety
-question that is not a security incident, a failed payment delivered as an angry bug report —
-and each carries metadata marking it, so an experiment can be grouped by `trap` in the LangSmith UI.
-
-> The comparison comes back flat: both models score alike. The notebook treats that as a result
-> rather than a bug, which is the point — an experiment that finds no difference has still
-> answered its question.
+An incident-response supervisor delegates evidence gathering to an investigator subagent. The
+investigator writes `/investigation.json`; the supervisor applies response policy and issues a
+brief. A code evaluator grades the report, and an LLM judge grades the response. Six paired
+incidents run against two model configurations.
 
 ### Skills and AGENTS.md
 
@@ -188,7 +176,7 @@ panel is a progress UI streaming the coordinator's `todos` straight off agent st
 ├── async_agents/           # graph served to the async notebook
 │   └── researcher.py
 ├── data/                   # dataset rows kept out of the notebooks
-│   └── support_tickets.jsonl  # the evals dataset, one example per line
+│   └── incidents.jsonl       # six paired incident examples and tool fixtures
 ├── oncall_home/            # fixtures for the skills notebook
 │   ├── AGENTS.md           #   always-loaded conventions
 │   ├── memory/notes.md     #   writable learned preferences
@@ -199,12 +187,9 @@ panel is a progress UI streaming the coordinator's `todos` straight off agent st
 │   ├── stats.py            #   token and tool-call stats
 │   ├── charts.py           #   comparison bars
 │   ├── voice.py            #   mic and speaker streams
-│   └── triage_dataset.py   #   loads (and policy-checks) the evals dataset
+│   └── incident_dataset.py #   validates the evals dataset
 ├── images/                 # rendered notebook artifacts
 └── langgraph.json          # graph config for `langgraph dev`
 ```
 
-`util/` exists to keep the notebooks readable — the rendering helpers live there so each cell shows
-the Deep Agents API and nothing else. `triage_dataset.py` is there for the same reason: it loads the
-rows from `data/`, and checks on the way that every reference answer still follows from the policy
-the agent is handed, so a dataset edit cannot quietly disagree with the policy.
+`util/` keeps rendering and dataset checks out of the notebook cells.

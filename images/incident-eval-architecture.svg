@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 650" role="img" aria-labelledby="title desc">
+  <title id="title">Incident-response deep agent and evaluation paths</title>
+  <desc id="desc">A supervisor delegates an incident to an investigator. The investigator reads telemetry and recent changes and writes an investigation report. The supervisor reads the report, applies response policy, and issues a brief. Code grades the report and an LLM judge grades the brief.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#475569"/>
+    </marker>
+    <style>
+      .bg{fill:#f8fafc}.box{fill:#fff;stroke:#cbd5e1;stroke-width:2.5}.main{fill:#eff6ff;stroke:#3b82f6}.sub{fill:#ecfdf5;stroke:#10b981}.artifact{fill:#fffbeb;stroke:#f59e0b}.eval{fill:#faf5ff;stroke:#a855f7}
+      .title{font:700 32px Inter,system-ui,sans-serif;fill:#0f172a}.label{font:700 18px Inter,system-ui,sans-serif;fill:#0f172a}.text{font:500 14px Inter,system-ui,sans-serif;fill:#475569}.mono{font:600 14px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#334155}
+      .edge{fill:none;stroke:#475569;stroke-width:2.5;marker-end:url(#arrow)}.dash{fill:none;stroke:#94a3b8;stroke-width:2;stroke-dasharray:6 6;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1200" height="650"/>
+  <text class="title" x="600" y="52" text-anchor="middle">Incident-response deep agent</text>
+
+  <g transform="translate(45 92)">
+    <rect class="box" width="180" height="78" rx="16"/>
+    <text class="label" x="90" y="32" text-anchor="middle">Incident</text>
+    <text class="text" x="90" y="57" text-anchor="middle">alert + incident ID</text>
+  </g>
+
+  <g transform="translate(300 82)">
+    <rect class="box main" width="250" height="98" rx="18"/>
+    <text class="label" x="125" y="34" text-anchor="middle">Supervisor</text>
+    <text class="text" x="125" y="60" text-anchor="middle">delegates investigation</text>
+    <text class="text" x="125" y="80" text-anchor="middle">owns the response</text>
+  </g>
+
+  <g transform="translate(745 92)">
+    <rect class="box" width="190" height="78" rx="16"/>
+    <text class="mono" x="95" y="32" text-anchor="middle">response policy</text>
+    <text class="text" x="95" y="57" text-anchor="middle">severity + action rules</text>
+  </g>
+
+  <g transform="translate(990 82)">
+    <rect class="box artifact" width="170" height="98" rx="18"/>
+    <text class="label" x="85" y="35" text-anchor="middle">Brief</text>
+    <text class="text" x="85" y="62" text-anchor="middle">severity</text>
+    <text class="text" x="85" y="82" text-anchor="middle">action + reason</text>
+  </g>
+
+  <g transform="translate(300 270)">
+    <rect class="box sub" width="250" height="98" rx="18"/>
+    <text class="label" x="125" y="34" text-anchor="middle">Investigator</text>
+    <text class="text" x="125" y="60" text-anchor="middle">collects evidence</text>
+    <text class="text" x="125" y="80" text-anchor="middle">diagnoses cause + impact</text>
+  </g>
+
+  <g transform="translate(45 280)">
+    <rect class="box" width="180" height="78" rx="16"/>
+    <text class="mono" x="90" y="31" text-anchor="middle">get_telemetry</text>
+    <text class="mono" x="90" y="56" text-anchor="middle">get_recent_changes</text>
+  </g>
+
+  <g transform="translate(665 270)">
+    <rect class="box artifact" width="270" height="98" rx="18"/>
+    <text class="mono" x="135" y="35" text-anchor="middle">/investigation.json</text>
+    <text class="text" x="135" y="62" text-anchor="middle">evidence + cause + impact</text>
+    <text class="text" x="135" y="82" text-anchor="middle">shared through the filesystem</text>
+  </g>
+
+  <path class="edge" d="M225 131H300"/>
+  <path class="edge" d="M425 180V270"/>
+  <path class="edge" d="M225 319H300"/>
+  <path class="edge" d="M550 319H665"/>
+  <path class="edge" d="M800 270C800 220 650 150 550 132"/>
+  <path class="edge" d="M550 131H745"/>
+  <path class="edge" d="M935 131H990"/>
+
+  <line x1="40" y1="430" x2="1160" y2="430" stroke="#e2e8f0" stroke-width="2"/>
+
+  <g transform="translate(260 485)">
+    <rect class="box eval" width="300" height="94" rx="18"/>
+    <text class="label" x="150" y="34" text-anchor="middle">Code evaluator</text>
+    <text class="mono" x="150" y="63" text-anchor="middle">investigation_correct</text>
+  </g>
+  <g transform="translate(690 485)">
+    <rect class="box eval" width="300" height="94" rx="18"/>
+    <text class="label" x="150" y="34" text-anchor="middle">LLM judge</text>
+    <text class="mono" x="150" y="63" text-anchor="middle">response_quality</text>
+  </g>
+  <path class="dash" d="M800 368V465H410V485"/>
+  <path class="dash" d="M1075 180V465H840V485"/>
+</svg>
