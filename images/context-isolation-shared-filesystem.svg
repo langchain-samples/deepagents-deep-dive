@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Context isolation versus the shared filesystem</title>
+  <desc id="desc">A supervisor delegates to a subagent. The subagent's intermediate reasoning and tool results stay inside its own context window, while the file it writes lands in a filesystem backend that both agents share.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrow-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+    <style>
+      .bg { fill: #f8fafc; }
+      .title { font: 700 34px Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 16px Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #64748b; }
+      .zone { fill: #ffffff; stroke: #e2e8f0; stroke-width: 2; }
+      .node { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2.5; }
+      .primary { fill: #eff6ff; stroke: #3b82f6; }
+      .subagent { fill: #ecfdf5; stroke: #10b981; }
+      .result { fill: #fffbeb; stroke: #f59e0b; }
+      .node-title { font: 700 19px Inter, ui-sans-serif, system-ui, sans-serif; fill: #0f172a; }
+      .node-text { font: 500 14px Inter, ui-sans-serif, system-ui, sans-serif; fill: #334155; }
+      .step { font: 500 14px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; fill: #334155; }
+      .small { font: 600 12px Inter, ui-sans-serif, system-ui, sans-serif; fill: #475569; }
+      .edge { fill: none; stroke: #475569; stroke-width: 2.5; marker-end: url(#arrow); }
+      .edge-muted { fill: none; stroke: #94a3b8; stroke-width: 2.5; stroke-dasharray: 7 7; marker-end: url(#arrow); }
+      .edge-file { fill: none; stroke: #b45309; stroke-width: 3; marker-end: url(#arrow-amber); }
+      .edge-blocked { fill: none; stroke: #f87171; stroke-width: 2.5; stroke-dasharray: 6 6; }
+      .edge-label { font: 600 12px Inter, ui-sans-serif, system-ui, sans-serif; fill: #475569; }
+      .file-label { font: 700 13px Inter, ui-sans-serif, system-ui, sans-serif; fill: #b45309; }
+      .blocked-label { font: 600 12px Inter, ui-sans-serif, system-ui, sans-serif; fill: #b91c1c; }
+      .boundary { stroke: #cbd5e1; stroke-width: 2.5; stroke-dasharray: 9 8; }
+      .pill { fill: #e2e8f0; }
+      .caption { font: 600 15px Inter, ui-sans-serif, system-ui, sans-serif; fill: #334155; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1200" height="800"/>
+
+  <text x="600" y="58" text-anchor="middle" class="title">Context Isolation vs. Shared Filesystem</text>
+  <text x="600" y="88" text-anchor="middle" class="subtitle">The subagent's context is private — the files it writes are not</text>
+
+  <g id="workspace" transform="translate(50 120)">
+    <rect class="zone" x="0" y="0" width="1100" height="640" rx="30"/>
+
+    <!-- context boundary -->
+    <line class="boundary" x1="550" y1="24" x2="550" y2="312"/>
+
+    <!-- Supervisor -->
+    <g id="supervisor" transform="translate(30 30)">
+      <rect class="node primary" width="430" height="260" rx="22"/>
+      <text x="215" y="42" text-anchor="middle" class="node-title">Supervisor</text>
+      <rect x="125" y="56" width="180" height="26" rx="13" class="pill"/>
+      <text x="215" y="74" text-anchor="middle" class="small">its own context window</text>
+      <text x="34" y="119" class="step">user goal</text>
+      <text x="34" y="151" class="step">task(research-agent, …)</text>
+      <text x="34" y="183" class="step">&#8592; "wrote /research.md"</text>
+      <text x="34" y="215" class="step">read_file("/research.md")</text>
+      <text x="34" y="247" class="step">final answer</text>
+    </g>
+
+    <!-- Subagent -->
+    <g id="subagent" transform="translate(640 30)">
+      <rect class="node subagent" width="430" height="260" rx="22"/>
+      <text x="215" y="42" text-anchor="middle" class="node-title">Subagent</text>
+      <rect x="125" y="56" width="180" height="26" rx="13" class="pill"/>
+      <text x="215" y="74" text-anchor="middle" class="small">its own context window</text>
+      <text x="34" y="119" class="step">search(…) &#215; 7</text>
+      <text x="34" y="151" class="step">12k tokens of raw results</text>
+      <text x="34" y="183" class="step">drafts the findings</text>
+      <text x="34" y="215" class="step">write_file("/research.md")</text>
+      <text x="34" y="247" class="step">returns one line</text>
+    </g>
+
+    <!-- delegation -->
+    <path class="edge" d="M 462 112 L 636 112"/>
+    <text x="550" y="102" text-anchor="middle" class="edge-label">delegate</text>
+
+    <!-- final report -->
+    <path class="edge-muted" d="M 638 186 L 464 186"/>
+    <text x="550" y="206" text-anchor="middle" class="edge-label">
+      <tspan x="550" dy="0">final report</tspan>
+      <tspan x="550" dy="16">one line, not the content</tspan>
+    </text>
+
+    <!-- blocked: intermediate context never crosses -->
+    <path class="edge-blocked" d="M 638 264 L 576 264"/>
+    <circle cx="550" cy="264" r="15" fill="#fee2e2" stroke="#ef4444" stroke-width="2.5"/>
+    <path d="M 543 257 L 557 271 M 557 257 L 543 271" stroke="#ef4444" stroke-width="2.5" fill="none"/>
+    <text x="550" y="300" text-anchor="middle" class="blocked-label">
+      <tspan x="550" dy="0">reasoning &amp; raw tool results</tspan>
+      <tspan x="550" dy="16">never reach the supervisor</tspan>
+    </text>
+
+    <!-- shared filesystem -->
+    <g id="filesystem" transform="translate(30 400)">
+      <rect class="result" width="1040" height="180" rx="24" stroke-width="2.5"/>
+      <text x="520" y="44" text-anchor="middle" class="node-title">Shared Filesystem</text>
+      <text x="520" y="68" text-anchor="middle" class="node-text">one backend, shared by the supervisor and every subagent</text>
+      <g transform="translate(360 90)">
+        <rect class="node" width="320" height="66" rx="16" stroke="#f59e0b"/>
+        <text x="160" y="28" text-anchor="middle" class="file-label">/research.md</text>
+        <text x="160" y="50" text-anchor="middle" class="node-text">4,000 words of findings</text>
+      </g>
+    </g>
+
+    <!-- write / read arrows -->
+    <path class="edge-file" d="M 860 292 C 860 420, 830 495, 718 521"/>
+    <text x="884" y="392" class="edge-label" fill="#b45309">write_file</text>
+
+    <path class="edge-file" d="M 382 521 C 270 495, 240 420, 240 294"/>
+    <text x="216" y="392" text-anchor="end" class="edge-label" fill="#b45309">read_file</text>
+
+    <text x="550" y="614" text-anchor="middle" class="caption">Bulk output travels through the filesystem — only a one-line handoff travels through the conversation</text>
+  </g>
+</svg>
